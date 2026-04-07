@@ -1,0 +1,16 @@
+# Dependencies
+vendor/
+
+# Sensitive config
+connections.php
+
+# Composer
+composer.lock
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/

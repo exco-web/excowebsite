@@ -1,0 +1,61 @@
+<?php
+require '../vendor/autoload.php';
+use PHPMailer\PHPMailer\PHPMailer;
+
+include '../connections.php';
+
+// Fetch all confirmed bookings for tomorrow
+$stmt = mysqli_prepare($con, "
+    SELECT
+        b.date, b.time, b.reason,
+        COALESCE(u.name,  b.guest_name)  AS name,
+        COALESCE(u.email, b.guest_email) AS email
+    FROM bookings b
+    LEFT JOIN users u ON u.user_id = b.user_id
+    WHERE b.date = CURDATE() + INTERVAL 1 DAY
+      AND b.status = 'confirmed'
+      AND COALESCE(u.email, b.guest_email) IS NOT NULL
+");
+mysqli_stmt_execute($stmt);
+$bookings = mysqli_fetch_all(mysqli_stmt_get_result($stmt), MYSQLI_ASSOC);
+
+foreach ($bookings as $booking) {
+    $mail = new PHPMailer(true);
+    try {
+        $mail->isSMTP();
+        $mail->Host       = 'smtp.elasticemail.com';
+        $mail->SMTPAuth   = true;
+        $mail->AuthType   = 'LOGIN';
+        $mail->Username   = 'exco.website@gmail.com';
+        $mail->Password   = '598CE37DE7598B017D3D7DDF9FA345FD781D';
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+        $mail->Port       = 2525;
+
+        $mail->setFrom('exco.website@gmail.com', 'Expert Consult');
+        $mail->addAddress($booking['email'], $booking['name']);
+        $mail->isHTML(true);
+
+        $date = date('l, F j Y', strtotime($booking['date']));
+        $time = date('H:i', strtotime($booking['time']));
+        $name = htmlspecialchars($booking['name']);
+        $reason = htmlspecialchars($booking['reason'] ?? 'your appointment');
+
+        $mail->Subject = 'Reminder: Your appointment is tomorrow';
+        $mail->Body    = "
+            <p>Hi {$name},</p>
+            <p>This is a reminder that you have an appointment with <strong>Expert Consult</strong> tomorrow.</p>
+            <p>
+                <strong>Date:</strong> {$date}<br>
+                <strong>Time:</strong> {$time}<br>
+                <strong>Reason:</strong> {$reason}
+            </p>
+            <p>If you need to cancel or reschedule, please contact us as soon as possible.</p>
+            <p>We look forward to seeing you.</p>
+            <p>Expert Consult</p>
+        ";
+
+        $mail->send();
+    } catch (Exception $e) {
+        // Silent fail — could log to a file here if needed
+    }
+}

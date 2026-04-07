@@ -27,11 +27,14 @@ mysqli_stmt_execute($stmt);
 $bookings_result = mysqli_stmt_get_result($stmt);
 
 $email = $user_data['email'];
-$stmt = mysqli_prepare($con, "SELECT * FROM Individuals WHERE IndPrimeEmail = ? LIMIT 1");
-mysqli_stmt_bind_param($stmt, "s", $email);
-mysqli_stmt_execute($stmt);
-$result = mysqli_stmt_get_result($stmt);
-$row = $result ? mysqli_fetch_assoc($result) : [];
+$row = [];
+$stmt = mysqli_prepare($con, "SELECT * FROM individuals WHERE IndPrimeEmail = ? LIMIT 1");
+if ($stmt) {
+    mysqli_stmt_bind_param($stmt, "s", $email);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    $row = $result ? (mysqli_fetch_assoc($result) ?? []) : [];
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">

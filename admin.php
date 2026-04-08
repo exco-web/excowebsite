@@ -109,13 +109,14 @@ $allowed_times = ['10:00:00','11:00:00','12:00:00','13:00:00','14:00:00','15:00:
 $time_labels   = ['10:00:00'=>'10am','11:00:00'=>'11am','12:00:00'=>'12pm','13:00:00'=>'1pm','14:00:00'=>'2pm','15:00:00'=>'3pm','16:00:00'=>'4pm','17:00:00'=>'5pm','18:00:00'=>'6pm'];
 
 // Filters from GET
-$allowed_statuses = ['pending', 'confirmed', 'cancelled'];
-$filter_status  = isset($_GET['status']) && in_array($_GET['status'], $allowed_statuses) ? $_GET['status'] : '';
-$filter_date    = isset($_GET['date'])   && preg_match('/^\d{4}-\d{2}-\d{2}$/', $_GET['date']) ? $_GET['date'] : '';
-$filter_time    = isset($_GET['time'])   && in_array($_GET['time'], $allowed_times) ? $_GET['time'] : '';
-$filter_from    = isset($_GET['from'])   && preg_match('/^\d{4}-\d{2}-\d{2}$/', $_GET['from']) ? $_GET['from'] : '';
-$filter_to      = isset($_GET['to'])     && preg_match('/^\d{4}-\d{2}-\d{2}$/', $_GET['to'])   ? $_GET['to']   : '';
-$filter_search  = isset($_GET['search']) ? trim($_GET['search']) : '';
+$allowed_statuses = ['pending', 'confirmed', 'cancelled', 'completed'];
+$filter_status   = isset($_GET['status']) && in_array($_GET['status'], $allowed_statuses) ? $_GET['status'] : '';
+$filter_date     = isset($_GET['date'])   && preg_match('/^\d{4}-\d{2}-\d{2}$/', $_GET['date']) ? $_GET['date'] : '';
+$filter_time     = isset($_GET['time'])   && in_array($_GET['time'], $allowed_times) ? $_GET['time'] : '';
+$filter_from     = isset($_GET['from'])   && preg_match('/^\d{4}-\d{2}-\d{2}$/', $_GET['from']) ? $_GET['from'] : '';
+$filter_to       = isset($_GET['to'])     && preg_match('/^\d{4}-\d{2}-\d{2}$/', $_GET['to'])   ? $_GET['to']   : '';
+$filter_search   = isset($_GET['search']) ? trim($_GET['search']) : '';
+$show_history    = isset($_GET['history']);
 
 // Fetch distinct dates for dropdown
 $dates_result = mysqli_query($con, "SELECT DISTINCT date FROM bookings ORDER BY date ASC");
@@ -132,6 +133,8 @@ if ($filter_status) {
     $conditions[] = "b.status = ?";
     $params[] = $filter_status;
     $types   .= 's';
+} elseif (!$show_history) {
+    $conditions[] = "b.status != 'completed'";
 }
 if ($filter_date) {
     $conditions[] = "b.date = ?";
@@ -198,13 +201,22 @@ if ($params) {
                     <option value="pending"   <?= $filter_status === 'pending'   ? 'selected' : '' ?>>Pending</option>
                     <option value="confirmed" <?= $filter_status === 'confirmed' ? 'selected' : '' ?>>Confirmed</option>
                     <option value="cancelled" <?= $filter_status === 'cancelled' ? 'selected' : '' ?>>Cancelled</option>
+                    <option value="completed" <?= $filter_status === 'completed' ? 'selected' : '' ?>>Completed</option>
                 </select>
                 <input type="date" name="from" value="<?= htmlspecialchars($filter_from) ?>">
                 <span style="color:#666;">to</span>
                 <input type="date" name="to" value="<?= htmlspecialchars($filter_to) ?>">
+                <?php if ($show_history): ?>
+                    <input type="hidden" name="history" value="1">
+                <?php endif; ?>
                 <button type="submit" class="admin__save">Filter</button>
                 <?php if ($filter_status || $filter_from || $filter_to || $filter_search): ?>
-                    <a href="<?= BASE_URL ?>/admin.php" class="admin__clear">Clear</a>
+                    <a href="<?= BASE_URL ?>/admin.php<?= $show_history ? '?history' : '' ?>" class="admin__clear">Clear</a>
+                <?php endif; ?>
+                <?php if ($show_history): ?>
+                    <a href="<?= BASE_URL ?>/admin.php" class="admin__clear">Hide History</a>
+                <?php else: ?>
+                    <a href="<?= BASE_URL ?>/admin.php?history" class="admin__clear">Show History</a>
                 <?php endif; ?>
                 <a href="<?= BASE_URL ?>/admin-create-booking.php" class="admin__save" style="text-decoration:none; margin-left:auto;">+ Create Booking</a>
             </form>

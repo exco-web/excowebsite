@@ -2078,6 +2078,11 @@ input.admin__select[type="date"] {
     color: var(--status-cancelled-fg);
 }
 
+.bookings__status--completed {
+    background: #1e2a1e;
+    color: #6abf6a;
+}
+
 /* ── Index announcements sidebar ──────────────────────── */
 .main__announcements {
     padding: 20px 0px;

@@ -2109,6 +2109,10 @@ input.admin__select[type="date"] {
     align-self: flex-start;
 }
 
+.main__announcements__all:visited {
+    color: var(--accent);
+}
+
 .main__announcements__all:hover {
     text-decoration: underline;
 }
@@ -2299,6 +2303,10 @@ input.admin__select[type="date"] {
     color: var(--text-muted);
     text-decoration: none;
     font-size: 0.85rem;
+}
+
+.announcements__back:visited {
+    color: var(--text-muted);
 }
 
 .announcements__back:hover {

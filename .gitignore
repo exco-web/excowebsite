@@ -5,7 +5,7 @@ vendor/
 connections.php
 
 # Composer
-composer.lock
+# composer.lock intentionally tracked for consistent deploys
 
 # OS files
 .DS_Store

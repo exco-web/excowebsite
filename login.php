@@ -76,6 +76,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST"){
 
                 <div class="login__footer">
                     <a href="<?= BASE_URL ?>/">Cancel</a>
+                    <a href="<?= BASE_URL ?>/forgot-password.php">Forgot password?</a>
                     <a href="<?= BASE_URL ?>/signup.php">Create an account</a>
                 </div>
             </div>

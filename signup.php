@@ -1,6 +1,5 @@
 <?php
 require 'vendor/autoload.php';
-use PHPMailer\PHPMailer\PHPMailer;
 
 session_start();
 include("connections.php");
@@ -18,56 +17,42 @@ if ($_SERVER['REQUEST_METHOD'] == "POST"){
     if ($rate_error) {
         $error = $rate_error;
     } elseif(!empty($email) && !empty($password) && !empty($number) && !empty($name)){
+        if (strlen($password) < 6) {
+            $error = "Password must be at least 6 characters.";
+        } elseif (!preg_match('/[0-9!@#$%^&*()_+\-=\[\]{};\':\"\\|,.<>\/?]/', $password)) {
+            $error = "Password must contain at least one number or symbol.";
+        } else {
         $stmt = mysqli_prepare($con, "SELECT user_id FROM users WHERE email = ? LIMIT 1");
         mysqli_stmt_bind_param($stmt, "s", $email);
         mysqli_stmt_execute($stmt);
         mysqli_stmt_store_result($stmt);
         if(mysqli_stmt_num_rows($stmt) == 0){
             increment_rate_limit('signup');
-            // TODO: re-enable email verification when Elastic Email subscription is active
-            /*
-            $mail = new PHPMailer(true);
             try {
-                $mail->SMTPDebug = 2;
-                $mail->isSMTP();
-                $mail->Host = SMTP_HOST;
-                $mail->SMTPAuth = true;
-                $mail->AuthType = 'LOGIN';
-                $mail->Username = SMTP_USERNAME;
-                $mail->Password = SMTP_PASSWORD;
-                $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-                $mail->Port = SMTP_PORT;
-                $mail->setFrom(SMTP_USERNAME, 'EXPERT CONSULT WEBSITE');
-                $mail->addAddress($email, $name);
-                $mail->isHTML(true);
-
                 $verification_code = (string)random_int(100000, 999999);
-                $mail->Subject = 'This email is verifying your signup to our website';
-                $mail->Body = '<p>Your verification code is: <b style="font-size: 30px;">' . $verification_code . '</b></p>';
-                $mail->send();
-
                 $user_id = random_num(20);
                 $hashed = password_hash($password, PASSWORD_DEFAULT);
                 $stmt2 = mysqli_prepare($con, "INSERT INTO users (user_id,name,email,number,password,verification_code,email_verified_at) VALUES (?,?,?,?,?,?,NULL)");
                 mysqli_stmt_bind_param($stmt2, "ssssss", $user_id, $name, $email, $number, $hashed, $verification_code);
                 mysqli_stmt_execute($stmt2);
 
+                $resend = Resend::client(RESEND_API_KEY);
+                $resend->emails->send([
+                    'from'    => MAIL_FROM,
+                    'to'      => $email,
+                    'subject' => 'Verify your Expert Consult account',
+                    'html'    => '<p>Hi ' . htmlspecialchars($name) . ',</p><p>Your verification code is: <b style="font-size:30px;">' . $verification_code . '</b></p><p>Enter this code on the verification page to activate your account.</p><p>Expert Consult</p>',
+                ]);
+
                 header("Location: " . BASE_URL . "/email-verification.php?email=" . urlencode($email));
                 exit();
             } catch (Exception $e) {
-                $error = "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+                $error = "Could not send verification email. Please try again.";
             }
-            */
-            $user_id = random_num(20);
-            $hashed = password_hash($password, PASSWORD_DEFAULT);
-            $stmt2 = mysqli_prepare($con, "INSERT INTO users (user_id,name,email,number,password,verification_code,email_verified_at) VALUES (?,?,?,?,?,'',NOW())");
-            mysqli_stmt_bind_param($stmt2, "sssss", $user_id, $name, $email, $number, $hashed);
-            mysqli_stmt_execute($stmt2);
-            header("Location: " . BASE_URL . "/accountmade.php");
-            exit();
         } else {
             $error = "This user already exists";
         }
+        } // end password length check
     } else {
         $error = "Please enter valid information";
     }

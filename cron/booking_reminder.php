@@ -1,6 +1,5 @@
 <?php
 require '../vendor/autoload.php';
-use PHPMailer\PHPMailer\PHPMailer;
 
 include '../connections.php';
 
@@ -19,43 +18,33 @@ $stmt = mysqli_prepare($con, "
 mysqli_stmt_execute($stmt);
 $bookings = mysqli_fetch_all(mysqli_stmt_get_result($stmt), MYSQLI_ASSOC);
 
+$resend = Resend::client(RESEND_API_KEY);
+
 foreach ($bookings as $booking) {
-    $mail = new PHPMailer(true);
     try {
-        $mail->isSMTP();
-        $mail->Host       = SMTP_HOST;
-        $mail->SMTPAuth   = true;
-        $mail->AuthType   = 'LOGIN';
-        $mail->Username   = SMTP_USERNAME;
-        $mail->Password   = SMTP_PASSWORD;
-        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-        $mail->Port       = SMTP_PORT;
-
-        $mail->setFrom(SMTP_USERNAME, 'Expert Consult');
-        $mail->addAddress($booking['email'], $booking['name']);
-        $mail->isHTML(true);
-
-        $date = date('l, F j Y', strtotime($booking['date']));
-        $time = date('H:i', strtotime($booking['time']));
-        $name = htmlspecialchars($booking['name']);
+        $date   = date('l, F j Y', strtotime($booking['date']));
+        $time   = date('H:i', strtotime($booking['time']));
+        $name   = htmlspecialchars($booking['name']);
         $reason = htmlspecialchars($booking['reason'] ?? 'your appointment');
 
-        $mail->Subject = 'Reminder: Your appointment is tomorrow';
-        $mail->Body    = "
-            <p>Hi {$name},</p>
-            <p>This is a reminder that you have an appointment with <strong>Expert Consult</strong> tomorrow.</p>
-            <p>
-                <strong>Date:</strong> {$date}<br>
-                <strong>Time:</strong> {$time}<br>
-                <strong>Reason:</strong> {$reason}
-            </p>
-            <p>If you need to cancel or reschedule, please contact us as soon as possible.</p>
-            <p>We look forward to seeing you.</p>
-            <p>Expert Consult</p>
-        ";
-
-        $mail->send();
+        $resend->emails->send([
+            'from'    => MAIL_FROM,
+            'to'      => $booking['email'],
+            'subject' => 'Reminder: Your appointment is tomorrow',
+            'html'    => "
+                <p>Hi {$name},</p>
+                <p>This is a reminder that you have an appointment with <strong>Expert Consult</strong> tomorrow.</p>
+                <p>
+                    <strong>Date:</strong> {$date}<br>
+                    <strong>Time:</strong> {$time}<br>
+                    <strong>Reason:</strong> {$reason}
+                </p>
+                <p>If you need to cancel or reschedule, please contact us as soon as possible.</p>
+                <p>We look forward to seeing you.</p>
+                <p>Expert Consult</p>
+            ",
+        ]);
     } catch (Exception $e) {
-        // Silent fail — could log to a file here if needed
+        // Silent fail
     }
 }

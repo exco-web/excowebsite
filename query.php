@@ -1,6 +1,5 @@
 <?php
 require 'vendor/autoload.php';
-use PHPMailer\PHPMailer\PHPMailer;
 
 session_start();
 include("connections.php");
@@ -19,27 +18,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $message = trim($_POST['message'] ?? '');
 
     if ($email && $subject && $message) {
-        $mail = new PHPMailer(true);
         try {
-            $mail->isSMTP();
-            $mail->Host       = SMTP_HOST;
-            $mail->SMTPAuth   = true;
-            $mail->AuthType   = 'LOGIN';
-            $mail->Username   = SMTP_USERNAME;
-            $mail->Password   = SMTP_PASSWORD;
-            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-            $mail->Port       = SMTP_PORT;
-
-            $mail->setFrom(SMTP_USERNAME, 'EXPERT CONSULT WEBSITE');
-            $mail->addAddress(SMTP_USERNAME);
-            $mail->addReplyTo($email);
-            $mail->isHTML(true);
-            $mail->Subject = $subject;
-            $mail->Body    = "Email: " . htmlspecialchars($email) . "<br>Phone number: " . htmlspecialchars($number) . "<br>Subject: " . htmlspecialchars($subject) . "<br><br>Message:<br>" . nl2br(htmlspecialchars($message));
-            $mail->send();
+            $resend = Resend::client(RESEND_API_KEY);
+            $resend->emails->send([
+                'from'       => MAIL_FROM,
+                'to'         => 'exco.website@gmail.com',
+                'reply_to'   => $email,
+                'subject'    => $subject,
+                'html'       => "Email: " . htmlspecialchars($email) . "<br>Phone number: " . htmlspecialchars($number) . "<br>Subject: " . htmlspecialchars($subject) . "<br><br>Message:<br>" . nl2br(htmlspecialchars($message)),
+            ]);
             $success = "Message sent successfully!";
         } catch (Exception $e) {
-            $error = "Message could not be sent. Error: {$mail->ErrorInfo}";
+            $error = "Message could not be sent. Please try again.";
         }
     } else {
         $error = "Please fill in all required fields.";

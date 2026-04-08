@@ -23,15 +23,15 @@ foreach ($bookings as $booking) {
     $mail = new PHPMailer(true);
     try {
         $mail->isSMTP();
-        $mail->Host       = 'smtp.elasticemail.com';
+        $mail->Host       = SMTP_HOST;
         $mail->SMTPAuth   = true;
         $mail->AuthType   = 'LOGIN';
-        $mail->Username   = 'exco.website@gmail.com';
-        $mail->Password   = '598CE37DE7598B017D3D7DDF9FA345FD781D';
+        $mail->Username   = SMTP_USERNAME;
+        $mail->Password   = SMTP_PASSWORD;
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-        $mail->Port       = 2525;
+        $mail->Port       = SMTP_PORT;
 
-        $mail->setFrom('exco.website@gmail.com', 'Expert Consult');
+        $mail->setFrom(SMTP_USERNAME, 'Expert Consult');
         $mail->addAddress($booking['email'], $booking['name']);
         $mail->isHTML(true);
 

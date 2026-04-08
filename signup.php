@@ -30,14 +30,14 @@ if ($_SERVER['REQUEST_METHOD'] == "POST"){
             try {
                 $mail->SMTPDebug = 2;
                 $mail->isSMTP();
-                $mail->Host = 'smtp.elasticemail.com';
+                $mail->Host = SMTP_HOST;
                 $mail->SMTPAuth = true;
                 $mail->AuthType = 'LOGIN';
-                $mail->Username = 'exco.website@gmail.com';
-                $mail->Password = '85AB4B25DFEC1FA8BFEA53B2D93DE9FFC869';
+                $mail->Username = SMTP_USERNAME;
+                $mail->Password = SMTP_PASSWORD;
                 $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-                $mail->Port = 2525;
-                $mail->setFrom('exco.website@gmail.com', 'EXPERT CONSULT WEBSITE');
+                $mail->Port = SMTP_PORT;
+                $mail->setFrom(SMTP_USERNAME, 'EXPERT CONSULT WEBSITE');
                 $mail->addAddress($email, $name);
                 $mail->isHTML(true);
 

@@ -89,7 +89,6 @@ $all = $announcements ? mysqli_fetch_all($announcements, MYSQLI_ASSOC) : [];
             <?php if ($single): ?>
                 <!-- Single announcement view -->
                 <div class="announcements__single">
-                    <a href="<?= BASE_URL ?>/index.php" class="main__announcements__all">&larr; Back To Home</a>
                     <a href="<?= BASE_URL ?>/announcements.php" class="announcements__back">&larr; All Announcements</a>
                     <div class="announcements__single__card">
                         <h1 class="announcements__single__title"><?= htmlspecialchars($single['title']) ?></h1>

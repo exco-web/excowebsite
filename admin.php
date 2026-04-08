@@ -356,29 +356,38 @@ if ($params) {
 
             // Grey out Save buttons until a change is made
             document.querySelectorAll('form[id^="edit-"]').forEach(form => {
+                const formId  = form.id;
                 const saveBtn = form.querySelector('.admin__save');
                 saveBtn.disabled = true;
 
+                // Collect all fields: inside the form + external fields referencing it via form="id"
+                function getFields() {
+                    return [
+                        ...form.querySelectorAll('input, select, textarea'),
+                        ...document.querySelectorAll(`[form="${formId}"]`)
+                    ];
+                }
+
                 const snapshot = {};
-                form.querySelectorAll('input, select, textarea').forEach(el => {
+                getFields().forEach(el => {
                     if (el.name) snapshot[el.name] = el.value;
                 });
 
                 function checkChanged() {
-                    const changed = Array.from(form.querySelectorAll('input, select, textarea'))
-                        .some(el => el.name && el.value !== snapshot[el.name]);
+                    const changed = getFields().some(el => el.name && el.value !== snapshot[el.name]);
                     saveBtn.disabled = !changed;
+                    if (!saveBtn.disabled) saveBtn.style.borderColor = saveBtn.style.color = '#4caf50';
+                    else saveBtn.style.borderColor = saveBtn.style.color = '';
                 }
 
-                form.querySelectorAll('input, select, textarea').forEach(el => {
+                getFields().forEach(el => {
                     el.addEventListener('change', checkChanged);
                     el.addEventListener('input', checkChanged);
                 });
 
                 // Re-check when notes hidden input is updated via modal
-                const notesHidden = form.querySelector('input[name="notes"]');
+                const notesHidden = document.getElementById('notes-hidden-' + formId.replace('edit-', ''));
                 if (notesHidden) {
-                    new MutationObserver(checkChanged).observe(notesHidden, { attributes: true, attributeFilter: ['value'] });
                     Object.defineProperty(notesHidden, 'value', {
                         get() { return this._value ?? this.getAttribute('value') ?? ''; },
                         set(v) { this._value = v; checkChanged(); }

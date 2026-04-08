@@ -1,4 +1,6 @@
 <?php
+require 'vendor/autoload.php';
+
 session_start();
 include("connections.php");
 include("functions.php");
@@ -26,22 +28,78 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['booking_id'], $_POST[
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['booking_id'], $_POST['status'])) {
-    $allowed_statuses = ['pending', 'confirmed', 'cancelled'];
+    $allowed_statuses   = ['pending', 'confirmed', 'cancelled'];
     $allowed_times_post = ['10:00:00','11:00:00','12:00:00','13:00:00','14:00:00','15:00:00','16:00:00','17:00:00','18:00:00'];
-    $allowed_reasons = ['Initial Consultation', 'Follow-up Appointment', 'Document Review', 'Legal Advice', 'Financial Planning', 'Other'];
+    $allowed_reasons    = ['Initial Consultation', 'Follow-up Appointment', 'Document Review', 'Legal Advice', 'Financial Planning', 'Other'];
+
     if (in_array($_POST['status'], $allowed_statuses)) {
+        $booking_id = (int)$_POST['booking_id'];
+        $new_status = $_POST['status'];
         $new_date   = isset($_POST['new_date']) && preg_match('/^\d{4}-\d{2}-\d{2}$/', $_POST['new_date']) ? $_POST['new_date'] : null;
         $new_time   = isset($_POST['new_time']) && in_array($_POST['new_time'], $allowed_times_post) ? $_POST['new_time'] : null;
         $new_notes  = isset($_POST['notes']) ? trim($_POST['notes']) : null;
         $new_reason = isset($_POST['reason']) && in_array($_POST['reason'], $allowed_reasons) ? $_POST['reason'] : null;
+
+        // Fetch current booking to detect changes and get client contact
+        $prev_stmt = mysqli_prepare($con, "
+            SELECT b.status, b.date, b.time, b.reason,
+                   COALESCE(u.name,  b.guest_name)  AS name,
+                   COALESCE(u.email, b.guest_email) AS email
+            FROM bookings b
+            LEFT JOIN users u ON u.user_id = b.user_id
+            WHERE b.id = ?
+        ");
+        mysqli_stmt_bind_param($prev_stmt, "i", $booking_id);
+        mysqli_stmt_execute($prev_stmt);
+        $prev = mysqli_fetch_assoc(mysqli_stmt_get_result($prev_stmt));
+
         if ($new_date && $new_time) {
             $stmt = mysqli_prepare($con, "UPDATE bookings SET status = ?, date = ?, time = ?, notes = ?, reason = ? WHERE id = ?");
-            mysqli_stmt_bind_param($stmt, "sssssi", $_POST['status'], $new_date, $new_time, $new_notes, $new_reason, $_POST['booking_id']);
+            mysqli_stmt_bind_param($stmt, "sssssi", $new_status, $new_date, $new_time, $new_notes, $new_reason, $booking_id);
         } else {
+            $new_date = $prev['date'];
+            $new_time = $prev['time'];
             $stmt = mysqli_prepare($con, "UPDATE bookings SET status = ?, notes = ?, reason = ? WHERE id = ?");
-            mysqli_stmt_bind_param($stmt, "sssi", $_POST['status'], $new_notes, $new_reason, $_POST['booking_id']);
+            mysqli_stmt_bind_param($stmt, "sssi", $new_status, $new_notes, $new_reason, $booking_id);
         }
         mysqli_stmt_execute($stmt);
+
+        // Email client if status changed or date/time changed
+        $status_changed   = $prev && $prev['status'] !== $new_status;
+        $datetime_changed = $prev && ($prev['date'] !== $new_date || $prev['time'] !== $new_time);
+
+        if ($prev && $prev['email'] && ($status_changed || $datetime_changed)) {
+            $client_name = htmlspecialchars($prev['name'] ?? 'there');
+            $date_fmt    = date('l, F j Y', strtotime($new_date));
+            $time_fmt    = date('H:i', strtotime($new_time));
+            $reason_fmt  = htmlspecialchars($new_reason ?? $prev['reason'] ?? 'your appointment');
+
+            $status_labels = ['pending' => 'Pending', 'confirmed' => 'Confirmed', 'cancelled' => 'Cancelled'];
+            $status_fmt    = $status_labels[$new_status] ?? ucfirst($new_status);
+
+            $changes = [];
+            if ($status_changed)   $changes[] = "<strong>Status:</strong> {$status_fmt}";
+            if ($datetime_changed) $changes[] = "<strong>Date:</strong> {$date_fmt}<br><strong>Time:</strong> {$time_fmt}";
+            $changes_html = implode('<br>', $changes);
+
+            try {
+                $resend = Resend::client(RESEND_API_KEY);
+                $resend->emails->send([
+                    'from'    => MAIL_FROM,
+                    'to'      => $prev['email'],
+                    'subject' => 'Your booking has been updated — Expert Consult',
+                    'html'    => "
+                        <p>Hi {$client_name},</p>
+                        <p>Your booking with <strong>Expert Consult</strong> has been updated:</p>
+                        <p>{$changes_html}<br><strong>Reason:</strong> {$reason_fmt}</p>
+                        <p>If you have any questions, please contact us.</p>
+                        <p>Expert Consult</p>
+                    ",
+                ]);
+            } catch (Exception $e) {
+                // Silent fail
+            }
+        }
     }
     header("Location: " . BASE_URL . "/admin.php?" . http_build_query($_GET));
     exit();

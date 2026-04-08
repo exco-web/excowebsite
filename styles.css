@@ -1440,6 +1440,13 @@ animation-fill-mode: backwards;
     box-shadow: inset 0 0 40px rgba(255, 255, 255, 0.15), 0 0 0 1px rgba(255, 255, 255, 0.25);
 }
 
+.admin__notes-btn {
+    white-space: normal;
+    word-break: break-word;
+    max-width: 160px;
+    text-align: left;
+}
+
 
 
 @media screen and (max-width: 960px) {

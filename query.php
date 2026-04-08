@@ -4,7 +4,7 @@ include("connections.php");
 include("functions.php");
 $user_data = check_login($con);
 
-$gmail_url = 'https://mail.google.com/mail/?view=cm&to=dkichukov%40gmail.com';
+$gmail_url = 'https://mail.google.com/mail/?view=cm&to=decidio%40gmail.com';
 ?>
 <!DOCTYPE html>
 <html lang="en">

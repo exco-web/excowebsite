@@ -84,6 +84,7 @@ $all = $announcements ? mysqli_fetch_all($announcements, MYSQLI_ASSOC) : [];
         <?php endif; ?>
 
         <div class="everything">
+        <button class="">Back To Home</button>
         <div class="announcements__page">
 
             <?php if ($single): ?>

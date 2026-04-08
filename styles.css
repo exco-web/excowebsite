@@ -1260,11 +1260,6 @@ textarea:focus{
     transition: all 0.3s ease;
 }
 
-
-button{
-
-}
-
 .button a{
     position: relative;
     z-index: 2;

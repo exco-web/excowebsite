@@ -37,14 +37,14 @@ if ($_SERVER['REQUEST_METHOD'] == "POST"){
                     die();
                 } else {
                     increment_rate_limit('login');
-                    $error = "Wrong password";
+                    $error = "Invalid email or password.";
                 }
             } else {
-                $error = "Email hasn't been verified. Sign up again to get an account";
+                $error = "Email hasn't been verified. Sign up again to get an account.";
             }
         } else {
             increment_rate_limit('login');
-            $error = "Couldn't find email";
+            $error = "Invalid email or password.";
         }
     } else {
         $error = "Please enter valid information";

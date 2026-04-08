@@ -113,7 +113,7 @@ $all = $announcements ? mysqli_fetch_all($announcements, MYSQLI_ASSOC) : [];
 
             <?php else: ?>
                 <!-- List view -->
-                <a href="<?= BASE_URL ?>/index.php" class="main__announcements__all">&larr; Back To Home</a>
+                <a href="<?= BASE_URL ?>/index.php" class="announcements_back">&larr; Back To Home</a>
                 <div class="announcements__header">
                     <h1>Announcements</h1>
                 </div>

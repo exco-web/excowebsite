@@ -15,8 +15,9 @@ mysqli_query($con, "ALTER TABLE bookings ADD COLUMN IF NOT EXISTS guest_name VAR
 mysqli_query($con, "ALTER TABLE bookings ADD COLUMN IF NOT EXISTS guest_email VARCHAR(255) NULL");
 mysqli_query($con, "ALTER TABLE bookings ADD COLUMN IF NOT EXISTS guest_phone VARCHAR(50) NULL");
 
-$allowed_times = ['10:00:00','11:00:00','12:00:00','13:00:00','14:00:00','15:00:00','16:00:00','17:00:00','18:00:00'];
-$time_labels   = ['10:00:00'=>'10am','11:00:00'=>'11am','12:00:00'=>'12pm','13:00:00'=>'1pm','14:00:00'=>'2pm','15:00:00'=>'3pm','16:00:00'=>'4pm','17:00:00'=>'5pm','18:00:00'=>'6pm'];
+$allowed_times  = ['10:00:00','11:00:00','12:00:00','13:00:00','14:00:00','15:00:00','16:00:00','17:00:00','18:00:00'];
+$time_labels    = ['10:00:00'=>'10am','11:00:00'=>'11am','12:00:00'=>'12pm','13:00:00'=>'1pm','14:00:00'=>'2pm','15:00:00'=>'3pm','16:00:00'=>'4pm','17:00:00'=>'5pm','18:00:00'=>'6pm'];
+$allowed_reasons = ['Initial Consultation', 'Follow-up Appointment', 'Document Review', 'Legal Advice', 'Financial Planning', 'Other'];
 
 $errors = [];
 
@@ -26,16 +27,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $guest_email = trim($_POST['guest_email'] ?? '');
     $guest_phone = trim($_POST['guest_phone'] ?? '');
     $notes       = trim($_POST['notes']       ?? '');
-    $new_date    = isset($_POST['date']) && preg_match('/^\d{4}-\d{2}-\d{2}$/', $_POST['date']) ? $_POST['date'] : '';
-    $new_time    = isset($_POST['time']) && in_array($_POST['time'], $allowed_times) ? $_POST['time'] : '';
+    $new_date    = isset($_POST['date'])   && preg_match('/^\d{4}-\d{2}-\d{2}$/', $_POST['date'])   ? $_POST['date']   : '';
+    $new_time   = isset($_POST['time'])   && in_array($_POST['time'],   $allowed_times)   ? $_POST['time']   : '';
+    $new_reason = isset($_POST['reason']) && in_array($_POST['reason'], $allowed_reasons) ? $_POST['reason'] : null;
 
     if (!$guest_name) $errors[] = "Full name is required.";
     if (!$new_date)   $errors[] = "Please enter a valid date.";
     if (!$new_time)   $errors[] = "Please select a time slot.";
 
     if (!$errors) {
-        $stmt = mysqli_prepare($con, "INSERT INTO bookings (user_id, date, time, status, guest_name, guest_email, guest_phone, notes) VALUES (NULL, ?, ?, 'confirmed', ?, ?, ?, ?)");
-        mysqli_stmt_bind_param($stmt, "ssssss", $new_date, $new_time, $guest_name, $guest_email, $guest_phone, $notes);
+        $stmt = mysqli_prepare($con, "INSERT INTO bookings (user_id, date, time, status, reason, guest_name, guest_email, guest_phone, notes) VALUES (NULL, ?, ?, 'confirmed', ?, ?, ?, ?, ?)");
+        mysqli_stmt_bind_param($stmt, "sssssss", $new_date, $new_time, $new_reason, $guest_name, $guest_email, $guest_phone, $notes);
         mysqli_stmt_execute($stmt);
         header("Location: " . BASE_URL . "/admin.php");
         exit();
@@ -84,12 +86,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 <div class="admin__create-row">
                     <div class="admin__create-field">
-                        <label for="date">Date</label>
+                        <label for="date">Date <span style="color:var(--accent)">*</span></label>
                         <input type="date" name="date" id="date" class="admin__select"
                                value="<?= htmlspecialchars($_POST['date'] ?? '') ?>">
                     </div>
                     <div class="admin__create-field">
-                        <label for="time">Time</label>
+                        <label for="time">Time <span style="color:var(--accent)">*</span></label>
                         <select name="time" id="time" class="admin__select">
                             <?php foreach ($time_labels as $val => $label): ?>
                                 <option value="<?= $val ?>"
@@ -99,6 +101,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <?php endforeach; ?>
                         </select>
                     </div>
+                </div>
+
+                <div class="admin__create-field">
+                    <label for="reason">Reason</label>
+                    <select name="reason" id="reason" class="admin__select admin__select--wide">
+                        <option value="">— None —</option>
+                        <?php foreach ($allowed_reasons as $r): ?>
+                            <option value="<?= $r ?>" <?= (isset($_POST['reason']) && $_POST['reason'] === $r) ? 'selected' : '' ?>><?= $r ?></option>
+                        <?php endforeach; ?>
+                    </select>
                 </div>
 
                 <div class="admin__create-field">

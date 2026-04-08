@@ -59,12 +59,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 <form class="query__form" method="post">
                     <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(csrf_token()) ?>">
-                    <div class="query__form__row">
-                        <input type="email" placeholder="Email" name="email" value="<?= htmlspecialchars($user_data["email"]) ?>">
-                        <input type="text" placeholder="Phone Number" name="number" value="<?= htmlspecialchars($user_data["number"]) ?>">
+                    <input type="hidden" name="email"  value="<?= htmlspecialchars($user_data["email"]) ?>">
+                    <input type="hidden" name="number" value="<?= htmlspecialchars($user_data["number"]) ?>">
+
+                    <div class="query__info">
+                        <div class="query__info__row">
+                            <span class="query__info__label">Name</span>
+                            <span class="query__info__value"><?= htmlspecialchars($user_data["name"]) ?></span>
+                        </div>
+                        <div class="query__info__row">
+                            <span class="query__info__label">Email</span>
+                            <span class="query__info__value"><?= htmlspecialchars($user_data["email"]) ?></span>
+                        </div>
+                        <div class="query__info__row">
+                            <span class="query__info__label">Phone</span>
+                            <span class="query__info__value"><?= htmlspecialchars($user_data["number"] ?: '—') ?></span>
+                        </div>
                     </div>
+
                     <input type="text" placeholder="Subject" name="subject" autocomplete="off">
-                    <textarea name="message" placeholder="Your message..." rows="8"></textarea>
+                    <textarea name="message" placeholder="Your message..." rows="14"></textarea>
                     <button type="submit" class="admin__save" style="margin-top:0.25rem; padding:0.5rem 1.5rem; font-size:0.9rem; align-self:center;">Send Message</button>
                 </form>
             </div>

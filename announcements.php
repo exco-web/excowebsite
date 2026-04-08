@@ -133,7 +133,7 @@ $all = $announcements ? mysqli_fetch_all($announcements, MYSQLI_ASSOC) : [];
                                     <option value="<?= $val ?>"><?= $label ?></option>
                                 <?php endforeach; ?>
                             </select>
-                            <textarea name="content" placeholder="Content..." rows="5" required></textarea>
+                            <textarea name="content" placeholder="Content..." rows="16" required></textarea>
                             <button type="submit" class="admin__save" style="align-self:flex-start;">Post</button>
                         </form>
                     </div>

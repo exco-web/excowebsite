@@ -342,6 +342,7 @@ if ($params) {
                 const btn = document.querySelector(`.admin__notes-btn[data-id="${activeId}"]`);
 
                 hidden.value = notes;
+                hidden.dispatchEvent(new Event('input'));
                 btn.dataset.notes = notes;
 
                 if (notes.trim()) {
@@ -385,14 +386,6 @@ if ($params) {
                     el.addEventListener('input', checkChanged);
                 });
 
-                // Re-check when notes hidden input is updated via modal
-                const notesHidden = document.getElementById('notes-hidden-' + formId.replace('edit-', ''));
-                if (notesHidden) {
-                    Object.defineProperty(notesHidden, 'value', {
-                        get() { return this._value ?? this.getAttribute('value') ?? ''; },
-                        set(v) { this._value = v; checkChanged(); }
-                    });
-                }
             });
         </script>
     </body>

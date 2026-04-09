@@ -211,14 +211,14 @@ if ($params) {
                 <?php endif; ?>
                 <button type="submit" class="admin__save">Filter</button>
                 <?php if ($filter_status || $filter_from || $filter_to || $filter_search): ?>
-                    <a href="<?= BASE_URL ?>/admin.php<?= $show_history ? '?history' : '' ?>" class="admin__clear">Clear</a>
+                    <a href="<?= BASE_URL ?>/admin<?= $show_history ? '?history' : '' ?>" class="admin__clear">Clear</a>
                 <?php endif; ?>
                 <?php if ($show_history): ?>
-                    <a href="<?= BASE_URL ?>/admin.php" class="admin__clear">Hide History</a>
+                    <a href="<?= BASE_URL ?>/admin" class="admin__clear">Hide History</a>
                 <?php else: ?>
-                    <a href="<?= BASE_URL ?>/admin.php?history" class="admin__clear">Show History</a>
+                    <a href="<?= BASE_URL ?>/admin?history" class="admin__clear">Show History</a>
                 <?php endif; ?>
-                <a href="<?= BASE_URL ?>/admin-create-booking.php" class="admin__save" style="text-decoration:none; margin-left:auto;">+ Create Booking</a>
+                <a href="<?= BASE_URL ?>/admin-create-booking" class="admin__save" style="text-decoration:none; margin-left:auto;">+ Create Booking</a>
             </form>
 
             <?php include 'includes/bookings-chart.php'; ?>

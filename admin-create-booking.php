@@ -120,7 +120,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 <div class="admin__create-actions">
                     <button type="submit" class="admin__save">Create Booking</button>
-                    <a href="<?= BASE_URL ?>/admin.php" class="admin__clear">Cancel</a>
+                    <a href="<?= BASE_URL ?>/admin" class="admin__clear">Cancel</a>
                 </div>
             </form>
         </div>

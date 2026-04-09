@@ -86,7 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST"){
 
                 <div class="login__footer">
                     <a href="<?= BASE_URL ?>/">Cancel</a>
-                    <a href="<?= BASE_URL ?>/login.php">Already have an account?</a>
+                    <a href="<?= BASE_URL ?>/login">Already have an account?</a>
                 </div>
             </div>
         </div>

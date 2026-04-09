@@ -15,7 +15,7 @@ include("functions.php");
         </h1>
         <br>
         <div style="text-align:center">
-            <a href="<?= BASE_URL ?>/login.php" class="main__btn">Log In</a>
+            <a href="<?= BASE_URL ?>/login" class="main__btn">Log In</a>
         </div>
 
         <script src="<?= BASE_URL ?>/app.js"></script>

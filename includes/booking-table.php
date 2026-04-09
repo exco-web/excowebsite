@@ -54,7 +54,7 @@
         <input type="hidden" name="time" id="booking-time-input" value="">
         <p id="cal-summary" style="display:none; color:#999; font-size:0.9rem; margin-top:1.25rem;"></p>
         <button type="submit" class="main__btn main__btn--dark" id="cal-submit" style="display:none; margin: 0.75rem 0 0 0;">Confirm Booking</button>
-        <a href="<?= BASE_URL ?>/index.php" class="main__btn main__btn--dark" style="margin: 0.75rem 0 0 0; align-self:flex-start;">Back to Home</a>
+        <a href="<?= BASE_URL ?>/" class="main__btn main__btn--dark" style="margin: 0.75rem 0 0 0; align-self:flex-start;">Back to Home</a>
     </form>
 
     <div class="booking__info-col">

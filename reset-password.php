@@ -56,11 +56,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $user) {
 
                 <?php if ($success): ?>
                     <p style="color:#4caf50; font-size:0.9rem; text-align:center; margin-bottom:1rem;"><?= htmlspecialchars($success) ?></p>
-                    <a href="<?= BASE_URL ?>/login.php" class="main__btn login__submit" style="text-align:center; text-decoration:none;">Go to Login</a>
+                    <a href="<?= BASE_URL ?>/login" class="main__btn login__submit" style="text-align:center; text-decoration:none;">Go to Login</a>
                 <?php elseif ($error && !$user): ?>
                     <p class="login__error"><?= htmlspecialchars($error) ?></p>
                     <div class="login__footer">
-                        <a href="<?= BASE_URL ?>/forgot-password.php">Request a new link</a>
+                        <a href="<?= BASE_URL ?>/forgot-password">Request a new link</a>
                     </div>
                 <?php else: ?>
                     <?php if ($error): ?>

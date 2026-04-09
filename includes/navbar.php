@@ -11,16 +11,16 @@
                         <a href="<?= BASE_URL ?>/" class="navbar__links">Home</a>
                     </li>
                     <li class="navbar__item">
-                        <a href="<?= BASE_URL ?>/login.php?redirect=booking.php" class="navbar__links">Booking</a>
+                        <a href="<?= BASE_URL ?>/login?redirect=booking" class="navbar__links">Booking</a>
                     </li>
                     <li class="navbar__item">
-                        <a href="<?= BASE_URL ?>/announcements.php" class="navbar__links">Announcements</a>
+                        <a href="<?= BASE_URL ?>/announcements" class="navbar__links">Announcements</a>
                     </li>
                     <li class="navbar__item">
-                        <a href="<?= BASE_URL ?>/login.php?redirect=query.php" class="navbar__links">Query</a>
+                        <a href="<?= BASE_URL ?>/login?redirect=query" class="navbar__links">Query</a>
                     </li>
                     <li class="navbar__btn">
-                        <a href="<?= BASE_URL ?>/login.php" class="button">Log In</a>
+                        <a href="<?= BASE_URL ?>/login" class="button">Log In</a>
                     </li>
                 </ul>
             </div>

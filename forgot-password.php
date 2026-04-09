@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             mysqli_stmt_bind_param($stmt2, "sss", $token, $expiry, $user['user_id']);
             mysqli_stmt_execute($stmt2);
 
-            $link = (isset($_SERVER['HTTPS']) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . BASE_URL . '/reset-password.php?token=' . $token;
+            $link = (isset($_SERVER['HTTPS']) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . BASE_URL . '/reset-password?token=' . $token;
 
             try {
                 $resend = Resend::client(RESEND_API_KEY);
@@ -89,7 +89,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <?php endif; ?>
 
                 <div class="login__footer">
-                    <a href="<?= BASE_URL ?>/login.php">Back to Login</a>
+                    <a href="<?= BASE_URL ?>/login">Back to Login</a>
                 </div>
             </div>
         </div>

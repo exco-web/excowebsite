@@ -49,7 +49,7 @@ if ($stmt) {
             </h1>
             <p style="color:#666; font-size:0.8rem;">Status: <?= htmlspecialchars(ucfirst($user_data['role'])) ?></p>
             <?php if ($user_data['role'] === 'admin'): ?>
-                <a href="<?= BASE_URL ?>/admin.php" class="main__btn main__btn--dark" style="margin:1rem 0 0 0;">Enter Admin View</a>
+                <a href="<?= BASE_URL ?>/admin" class="main__btn main__btn--dark" style="margin:1rem 0 0 0;">Enter Admin View</a>
             <?php endif; ?>
 
             <div class="profile__card">
@@ -111,7 +111,7 @@ if ($stmt) {
                             <?php endwhile; ?>
                         <?php else: ?>
                             <tr>
-                                <td colspan="4"><a href="<?= BASE_URL ?>/booking.php" style="color:#fe4534;">No bookings yet. Make one here.</a></td>
+                                <td colspan="4"><a href="<?= BASE_URL ?>/booking" style="color:#fe4534;">No bookings yet. Make one here.</a></td>
                             </tr>
                         <?php endif; ?>
                     </table>
@@ -124,7 +124,7 @@ if ($stmt) {
             </div>
 
             <div style="padding: 2rem 0;">
-                <a href="<?= BASE_URL ?>/index.php" class="main__btn" style="margin:0;">Back to Home</a>
+                <a href="<?= BASE_URL ?>/" class="main__btn" style="margin:0;">Back to Home</a>
             </div>
         </div>
 

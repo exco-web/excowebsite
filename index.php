@@ -55,7 +55,7 @@ $tag_labels = [
                             <h3 class="animateLong">Cutting-edge consulting for a fast-moving world.</h3>
                             <p class="animateLong">We combine deep industry expertise with forward-thinking strategy to help businesses adapt, grow, and lead. Whether you're navigating change or planning your next move, our consultants are ready to help.</p>
                             <div class="animateSlide" style="margin-top:1rem;">
-                                <a href="<?= BASE_URL ?>/login.php" class="main__btn main__btn--dark">Get Started</a>
+                                <a href="<?= BASE_URL ?>/login" class="main__btn main__btn--dark">Get Started</a>
                             </div>
                         <?php endif; ?>
                     </div>
@@ -68,7 +68,7 @@ $tag_labels = [
                         <h3 class="main__announcements__heading">Latest Updates</h3>
                         <div class="main__announcements__list">
                             <?php foreach ($recent_announcements as $a): ?>
-                                <a href="<?= BASE_URL ?>/announcements.php?id=<?= (int)$a['id'] ?>" class="main__announcements__item">
+                                <a href="<?= BASE_URL ?>/announcements?id=<?= (int)$a['id'] ?>" class="main__announcements__item">
                                     <?php if (!empty($a['tag'])): ?>
                                         <span class="announcements__tag announcements__tag--<?= htmlspecialchars($a['tag']) ?>"><?= htmlspecialchars($tag_labels[$a['tag']] ?? $a['tag']) ?></span>
                                     <?php endif; ?>
@@ -77,7 +77,7 @@ $tag_labels = [
                                 </a>
                             <?php endforeach; ?>
                         </div>
-                        <a href="<?= BASE_URL ?>/announcements.php" class="main__announcements__all">View all &rarr;</a>
+                        <a href="<?= BASE_URL ?>/announcements" class="main__announcements__all">View all &rarr;</a>
                     </div>
                     <?php endif; ?>
                 </div>

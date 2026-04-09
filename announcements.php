@@ -89,7 +89,7 @@ $all = $announcements ? mysqli_fetch_all($announcements, MYSQLI_ASSOC) : [];
             <?php if ($single): ?>
                 <!-- Single announcement view -->
                 <div class="announcements__single">
-                    <a href="<?= BASE_URL ?>/announcements.php" class="announcements__back">&larr; All Announcements</a>
+                    <a href="<?= BASE_URL ?>/announcements" class="announcements__back">&larr; All Announcements</a>
                     <div class="announcements__single__card">
                         <h1 class="announcements__single__title"><?= htmlspecialchars($single['title']) ?></h1>
                         <?php if (!empty($single['tag'])): ?>
@@ -113,7 +113,7 @@ $all = $announcements ? mysqli_fetch_all($announcements, MYSQLI_ASSOC) : [];
 
             <?php else: ?>
                 <!-- List view -->
-                <a href="<?= BASE_URL ?>/index.php" class="announcements__back">&larr; Back To Home</a>
+                <a href="<?= BASE_URL ?>/" class="announcements__back">&larr; Back To Home</a>
                 <div class="announcements__header">
                     <h1>Announcements</h1>
                 </div>
@@ -145,7 +145,7 @@ $all = $announcements ? mysqli_fetch_all($announcements, MYSQLI_ASSOC) : [];
                             <div class="announcements__card">
                                 <div class="announcements__card__body">
                                     <h2 class="announcements__card__title">
-                                        <a href="<?= BASE_URL ?>/announcements.php?id=<?= (int)$a['id'] ?>"><?= htmlspecialchars($a['title']) ?></a>
+                                        <a href="<?= BASE_URL ?>/announcements?id=<?= (int)$a['id'] ?>"><?= htmlspecialchars($a['title']) ?></a>
                                     </h2>
                                     <?php if (!empty($a['tag'])): ?>
                                         <span class="announcements__tag announcements__tag--<?= htmlspecialchars($a['tag']) ?>"><?= htmlspecialchars($tag_labels[$a['tag']] ?? $a['tag']) ?></span>
@@ -157,7 +157,7 @@ $all = $announcements ? mysqli_fetch_all($announcements, MYSQLI_ASSOC) : [];
                                     <p class="announcements__card__preview"><?= htmlspecialchars(mb_strimwidth($a['content'], 0, 160, '…')) ?></p>
                                 </div>
                                 <div class="announcements__card__footer">
-                                    <a href="<?= BASE_URL ?>/announcements.php?id=<?= (int)$a['id'] ?>" class="announcements__read-more">Read more &rarr;</a>
+                                    <a href="<?= BASE_URL ?>/announcements?id=<?= (int)$a['id'] ?>" class="announcements__read-more">Read more &rarr;</a>
                                     <?php if ($is_admin): ?>
                                         <form method="POST" style="display:inline;">
                                             <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(csrf_token()) ?>">

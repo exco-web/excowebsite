@@ -8,6 +8,17 @@ $redirect = (isset($_GET['redirect']) && in_array($_GET['redirect'], $allowed_re
     ? $_GET['redirect']
     : 'index.php';
 
+// Ensure required columns and table exist
+mysqli_query($con, "CREATE TABLE IF NOT EXISTS rate_limits (
+    ip VARCHAR(45) NOT NULL,
+    action VARCHAR(50) NOT NULL,
+    attempts INT NOT NULL DEFAULT 1,
+    window_start DATETIME NOT NULL,
+    PRIMARY KEY (ip, action)
+)");
+mysqli_query($con, "ALTER TABLE users ADD COLUMN IF NOT EXISTS failed_attempts INT NOT NULL DEFAULT 0");
+mysqli_query($con, "ALTER TABLE users ADD COLUMN IF NOT EXISTS locked_until DATETIME NULL");
+
 if ($_SERVER['REQUEST_METHOD'] == "POST"){
     csrf_verify();
 
@@ -15,35 +26,54 @@ if ($_SERVER['REQUEST_METHOD'] == "POST"){
         ? $_POST['redirect']
         : 'index.php';
 
-    $email = $_POST["Email"];
+    $email    = $_POST["Email"];
     $password = $_POST["Password"];
 
-    $rate_error = check_rate_limit('login');
-    if ($rate_error) {
-        $error = $rate_error;
-    } elseif(!empty($email) && !empty($password)){
+    $ip_error = check_ip_rate_limit($con, 'login', 20, 900);
+    if ($ip_error) {
+        $error = $ip_error;
+    } elseif (!empty($email) && !empty($password)) {
         $stmt = mysqli_prepare($con, "SELECT * FROM users WHERE email = ? LIMIT 1");
         mysqli_stmt_bind_param($stmt, "s", $email);
         mysqli_stmt_execute($stmt);
-        $result = mysqli_stmt_get_result($stmt);
-        if($result && mysqli_num_rows($result) > 0){
-            $user_data = mysqli_fetch_assoc($result);
-            if(!empty($user_data["email_verified_at"])){
-                if(password_verify($password, $user_data["password"])){
-                    clear_rate_limit('login');
-                    session_regenerate_id(true);
-                    $_SESSION['user_id'] = $user_data['user_id'];
-                    header("Location: " . BASE_URL . "/" . $redirect);
-                    die();
+        $result    = mysqli_stmt_get_result($stmt);
+        $user_data = $result ? mysqli_fetch_assoc($result) : null;
+
+        if ($user_data) {
+            // Check account lockout
+            if (!empty($user_data['locked_until']) && strtotime($user_data['locked_until']) > time()) {
+                $mins = ceil((strtotime($user_data['locked_until']) - time()) / 60);
+                $error = "Account locked. Try again in {$mins} minute(s) or reset your password.";
+            } elseif (empty($user_data['email_verified_at'])) {
+                $error = "Email hasn't been verified. Sign up again to get an account.";
+            } elseif (password_verify($password, $user_data["password"])) {
+                // Success — clear all counters
+                clear_ip_rate_limit($con, 'login');
+                $reset = mysqli_prepare($con, "UPDATE users SET failed_attempts = 0, locked_until = NULL WHERE user_id = ?");
+                mysqli_stmt_bind_param($reset, "s", $user_data['user_id']);
+                mysqli_stmt_execute($reset);
+                session_regenerate_id(true);
+                $_SESSION['user_id'] = $user_data['user_id'];
+                header("Location: " . BASE_URL . "/" . $redirect);
+                die();
+            } else {
+                // Wrong password
+                increment_ip_rate_limit($con, 'login');
+                $new_attempts = $user_data['failed_attempts'] + 1;
+                if ($new_attempts >= 10) {
+                    $lock = mysqli_prepare($con, "UPDATE users SET failed_attempts = ?, locked_until = DATE_ADD(NOW(), INTERVAL 30 MINUTE) WHERE user_id = ?");
+                    mysqli_stmt_bind_param($lock, "is", $new_attempts, $user_data['user_id']);
+                    mysqli_stmt_execute($lock);
+                    $error = "Too many failed attempts. Account locked for 30 minutes.";
                 } else {
-                    increment_rate_limit('login');
+                    $upd = mysqli_prepare($con, "UPDATE users SET failed_attempts = ? WHERE user_id = ?");
+                    mysqli_stmt_bind_param($upd, "is", $new_attempts, $user_data['user_id']);
+                    mysqli_stmt_execute($upd);
                     $error = "Invalid email or password.";
                 }
-            } else {
-                $error = "Email hasn't been verified. Sign up again to get an account.";
             }
         } else {
-            increment_rate_limit('login');
+            increment_ip_rate_limit($con, 'login');
             $error = "Invalid email or password.";
         }
     } else {

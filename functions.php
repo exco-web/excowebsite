@@ -32,6 +32,57 @@ function csrf_verify() {
     }
 }
 
+function get_client_ip() {
+    // Use Cloudflare's real IP header if present, fall back to REMOTE_ADDR
+    if (!empty($_SERVER['HTTP_CF_CONNECTING_IP'])) {
+        return $_SERVER['HTTP_CF_CONNECTING_IP'];
+    }
+    return $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
+}
+
+function check_ip_rate_limit($con, $action, $max = 10, $window = 900) {
+    $ip = get_client_ip();
+    $stmt = mysqli_prepare($con, "SELECT attempts, window_start FROM rate_limits WHERE ip = ? AND action = ?");
+    mysqli_stmt_bind_param($stmt, "ss", $ip, $action);
+    mysqli_stmt_execute($stmt);
+    $row = mysqli_fetch_assoc(mysqli_stmt_get_result($stmt));
+
+    if (!$row) return null;
+
+    $elapsed = time() - strtotime($row['window_start']);
+    if ($elapsed > $window) {
+        $del = mysqli_prepare($con, "DELETE FROM rate_limits WHERE ip = ? AND action = ?");
+        mysqli_stmt_bind_param($del, "ss", $ip, $action);
+        mysqli_stmt_execute($del);
+        return null;
+    }
+
+    if ($row['attempts'] >= $max) {
+        $remaining = $window - $elapsed;
+        return "Too many attempts. Please wait " . ceil($remaining / 60) . " minute(s).";
+    }
+
+    return null;
+}
+
+function increment_ip_rate_limit($con, $action) {
+    $ip = get_client_ip();
+    $stmt = mysqli_prepare($con, "
+        INSERT INTO rate_limits (ip, action, attempts, window_start)
+        VALUES (?, ?, 1, NOW())
+        ON DUPLICATE KEY UPDATE attempts = attempts + 1
+    ");
+    mysqli_stmt_bind_param($stmt, "ss", $ip, $action);
+    mysqli_stmt_execute($stmt);
+}
+
+function clear_ip_rate_limit($con, $action) {
+    $ip = get_client_ip();
+    $stmt = mysqli_prepare($con, "DELETE FROM rate_limits WHERE ip = ? AND action = ?");
+    mysqli_stmt_bind_param($stmt, "ss", $ip, $action);
+    mysqli_stmt_execute($stmt);
+}
+
 function check_rate_limit($key, $max = 5, $window = 900) {
     $attempts_key = 'rl_attempts_' . $key;
     $time_key     = 'rl_time_' . $key;

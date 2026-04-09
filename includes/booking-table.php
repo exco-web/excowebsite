@@ -58,15 +58,16 @@
     </form>
 
     <div class="booking__info-col">
-        <h2 class="booking__info-title">What to expect</h2>
-        <p class="booking__info-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-        <p class="booking__info-text">Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+        <h2 class="booking__info-title">How it works</h2>
+        <p class="booking__info-text">Select a date and time that works for you, choose a reason for your visit, and submit your request. We'll review it and send you a confirmation email once it's approved.</p>
         <ul class="booking__info-list">
-            <li>Placeholder item one</li>
-            <li>Placeholder item two</li>
-            <li>Placeholder item three</li>
+            <li>Bookings must be made at least one day in advance</li>
+            <li>Appointments are available Monday to Friday, 10am – 6pm</li>
+            <li>You can hold up to two active bookings at a time</li>
+            <li>Cancellations within 24 hours must be made by contacting us directly</li>
         </ul>
-        <p class="booking__info-text">Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+        <p class="booking__info-text">Once confirmed, you'll receive a reminder email the day before your appointment and your booking will appear <a href="<?=  BASE_URL ?>/account.php ?>">on you User Profile</a>. Please note that all bookings are subject to our review and acceptance.</p>
+        <p class="booking__info-text" style="color:var(--text-muted); font-size:0.8rem;">Booking confirmations are subject to our terms of service. We reserve the right to reschedule or decline appointments where necessary.</p>
     </div>
 </div>
 

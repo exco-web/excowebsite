@@ -98,11 +98,13 @@ html,body{
     align-items: center;
     margin: auto 0px;
     cursor: pointer;
+    overflow: hidden;
+    height: 100%;
 }
 
 #navbar__img {
     display: inline-block;
-    height: 120px;
+    height: 60px;
     width: auto;
     filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.8));
 }

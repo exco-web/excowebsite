@@ -1,0 +1,15 @@
+User-agent: *
+Disallow: /admin
+Disallow: /admin-create-booking
+Disallow: /account
+Disallow: /login
+Disallow: /signup
+Disallow: /logout
+Disallow: /forgot-password
+Disallow: /reset-password
+Disallow: /email-verification
+Disallow: /cron/
+
+Allow: /
+
+Sitemap: https://excoonline.co.uk/sitemap.xml

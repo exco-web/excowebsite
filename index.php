@@ -30,6 +30,7 @@ $tag_labels = [
     <?php
         $page_title = 'Home';
         $page_description = 'Expert Consult offers professional accounting and financial consulting services. Book a consultation online today.';
+        $page_canonical = 'https://excoonline.co.uk/';
         include 'includes/head.php';
     ?>
     <body>

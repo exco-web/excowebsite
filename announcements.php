@@ -35,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         $stmt = mysqli_prepare($con, "INSERT INTO announcements (user_id, title, tag, content, viewcount) VALUES (?, ?, ?, ?, 0)");
         mysqli_stmt_bind_param($stmt, "ssss", $user_data['user_id'], $title, $tag, $content);
         mysqli_stmt_execute($stmt);
-        header("Location: " . BASE_URL . "/announcements.php");
+        header("Location: " . BASE_URL . "/announcements");
         exit();
     } else {
         $create_error = "Title and content are required.";
@@ -49,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     $stmt   = mysqli_prepare($con, "DELETE FROM announcements WHERE id = ?");
     mysqli_stmt_bind_param($stmt, "i", $del_id);
     mysqli_stmt_execute($stmt);
-    header("Location: " . BASE_URL . "/announcements.php");
+    header("Location: " . BASE_URL . "/announcements");
     exit();
 }
 

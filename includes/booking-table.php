@@ -66,7 +66,7 @@
             <li>You can hold up to two active bookings at a time</li>
             <li>Cancellations within 24 hours must be made by contacting us directly</li>
         </ul>
-        <p class="booking__info-text">Once confirmed, you'll receive a reminder email the day before your appointment and your booking will appear <a href="<?= BASE_URL ?>/account" style="color:var(--accent); text-decoration:none; font-weight:500;">your User Profile</a>. Please note that all bookings are subject to our review and acceptance.</p>
+        <p class="booking__info-text">Once confirmed, you'll receive a reminder email the day before your appointment and your booking will appear <a href="<?= BASE_URL ?>/account" style="color:var(--accent); text-decoration:none; font-weight:500;">on your User Profile</a>. Please note that all bookings are subject to our review and acceptance.</p>
         <p class="booking__info-text" style="color:var(--text-muted); font-size:0.8rem;">Booking confirmations are subject to our terms of service. We reserve the right to reschedule or decline appointments where necessary.</p>
     </div>
 </div>

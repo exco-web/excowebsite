@@ -44,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST"){
                     'html'    => '<p>Hi ' . htmlspecialchars($name) . ',</p><p>Your verification code is: <b style="font-size:30px;">' . $verification_code . '</b></p><p>Enter this code on the verification page to activate your account.</p><p>Expert Consult</p>',
                 ]);
 
-                header("Location: " . BASE_URL . "/email-verification.php?email=" . urlencode($email));
+                header("Location: " . BASE_URL . "/email-verification?email=" . urlencode($email));
                 exit();
             } catch (Exception $e) {
                 $error = "Could not send verification email. Please try again.";

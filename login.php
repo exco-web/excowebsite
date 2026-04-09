@@ -3,7 +3,7 @@ session_start();
 include("connections.php");
 include("functions.php");
 
-$allowed_redirects = ['index.php', 'query.php', 'account.php', 'booking.php'];
+$allowed_redirects = ['index', 'query', 'account', 'booking'];
 $redirect = (isset($_GET['redirect']) && in_array($_GET['redirect'], $allowed_redirects))
     ? $_GET['redirect']
     : 'index.php';

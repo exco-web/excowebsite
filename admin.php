@@ -7,7 +7,7 @@ include("functions.php");
 $user_data = check_login($con);
 
 if ($user_data['role'] !== 'admin') {
-    header("Location: " . BASE_URL . "/index.php");
+    header("Location: " . BASE_URL . "/index");
     exit();
 }
 
@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['booking_id'], $_POST[
     $stmt = mysqli_prepare($con, "DELETE FROM bookings WHERE id = ?");
     mysqli_stmt_bind_param($stmt, "i", $_POST['booking_id']);
     mysqli_stmt_execute($stmt);
-    header("Location: " . BASE_URL . "/admin.php?" . http_build_query($_GET));
+    header("Location: " . BASE_URL . "/admin?" . http_build_query($_GET));
     exit();
 }
 
@@ -101,7 +101,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['booking_id'], $_POST[
             }
         }
     }
-    header("Location: " . BASE_URL . "/admin.php?" . http_build_query($_GET));
+    header("Location: " . BASE_URL . "/admin?" . http_build_query($_GET));
     exit();
 }
 

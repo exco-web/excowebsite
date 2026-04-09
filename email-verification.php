@@ -17,7 +17,7 @@ if (isset($_POST["verify_email"])) {
         mysqli_stmt_execute($stmt);
 
         if (mysqli_stmt_affected_rows($stmt) > 0) {
-            header("Location: " . BASE_URL . "/accountmade.php");
+            header("Location: " . BASE_URL . "/accountmade");
             exit();
         } else {
             $error = "Invalid or already used verification code. Please check and try again.";

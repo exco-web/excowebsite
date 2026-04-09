@@ -5,7 +5,7 @@ include("functions.php");
 $user_data = check_login($con);
 
 if ($user_data['role'] !== 'admin') {
-    header("Location: " . BASE_URL . "/index.php");
+    header("Location: " . BASE_URL . "/index");
     exit();
 }
 
@@ -39,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt = mysqli_prepare($con, "INSERT INTO bookings (user_id, date, time, status, reason, guest_name, guest_email, guest_phone, notes) VALUES (NULL, ?, ?, 'confirmed', ?, ?, ?, ?, ?)");
         mysqli_stmt_bind_param($stmt, "sssssss", $new_date, $new_time, $new_reason, $guest_name, $guest_email, $guest_phone, $notes);
         mysqli_stmt_execute($stmt);
-        header("Location: " . BASE_URL . "/admin.php");
+        header("Location: " . BASE_URL . "/admin");
         exit();
     }
 }

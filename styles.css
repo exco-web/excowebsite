@@ -98,8 +98,6 @@ html,body{
     align-items: center;
     margin: auto 0px;
     cursor: pointer;
-    overflow: hidden;
-    height: 100%;
 }
 
 #navbar__img {

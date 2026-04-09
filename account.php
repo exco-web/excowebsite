@@ -38,7 +38,7 @@ if ($stmt) {
 ?>
 <!DOCTYPE html>
 <html lang="en">
-    <?php include 'includes/head.php'; ?>
+    <?php $page_title = 'My Account'; include 'includes/head.php'; ?>
     <body>
         <?php include 'includes/navbar-loggedin.php'; ?>
 

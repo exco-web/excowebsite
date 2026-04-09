@@ -8,7 +8,7 @@ $gmail_url = 'https://mail.google.com/mail/?view=cm&to=decidio%40gmail.com';
 ?>
 <!DOCTYPE html>
 <html lang="en">
-    <?php include 'includes/head.php'; ?>
+    <?php $page_title = 'Contact Us'; include 'includes/head.php'; ?>
     <body>
         <?php include 'includes/navbar-loggedin.php'; ?>
 

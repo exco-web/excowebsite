@@ -187,7 +187,7 @@ if ($params) {
 ?>
 <!DOCTYPE html>
 <html lang="en">
-    <?php include 'includes/head.php'; ?>
+    <?php $page_title = 'Admin'; include 'includes/head.php'; ?>
     <body>
         <?php include 'includes/navbar-loggedin.php'; ?>
 

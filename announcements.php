@@ -75,7 +75,7 @@ $all = $announcements ? mysqli_fetch_all($announcements, MYSQLI_ASSOC) : [];
 ?>
 <!DOCTYPE html>
 <html lang="en">
-    <?php include 'includes/head.php'; ?>
+    <?php $page_title = 'Announcements'; include 'includes/head.php'; ?>
     <body>
         <?php if ($user_data): ?>
             <?php include 'includes/navbar-loggedin.php'; ?>

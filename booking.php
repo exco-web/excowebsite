@@ -1,4 +1,6 @@
 <?php
+require 'vendor/autoload.php';
+
 session_start();
 include("connections.php");
 include("functions.php");
@@ -66,7 +68,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['date'], $_POST['time'
                     $stmt = mysqli_prepare($con, "INSERT INTO bookings (user_id, date, time, reason) VALUES (?, ?, ?, ?)");
                     mysqli_stmt_bind_param($stmt, "ssss", $user_id, $date, $time, $reason);
                     mysqli_stmt_execute($stmt);
-                    $booking_success = "Booking confirmed for " . $d->format('l, F j Y') . " at " . date('H:i', strtotime($time)) . ".";
+
+                    $date_fmt = $d->format('l, F j Y');
+                    $time_fmt = date('H:i', strtotime($time));
+                    $booking_success = "Booking received for {$date_fmt} at {$time_fmt}. You'll receive a confirmation email shortly.";
+
+                    try {
+                        $resend = Resend::client(RESEND_API_KEY);
+                        $resend->emails->send([
+                            'from'    => MAIL_FROM,
+                            'to'      => $user_data['email'],
+                            'subject' => 'Booking received — Expert Consult',
+                            'html'    => "
+                                <p>Hi " . htmlspecialchars($user_data['name']) . ",</p>
+                                <p>We've received your booking request and will confirm it shortly.</p>
+                                <p>
+                                    <strong>Date:</strong> {$date_fmt}<br>
+                                    <strong>Time:</strong> {$time_fmt}<br>
+                                    <strong>Reason:</strong> " . htmlspecialchars($reason) . "
+                                </p>
+                                <p>If you need to cancel or have any questions, please contact us.</p>
+                                <p>Expert Consult</p>
+                            ",
+                        ]);
+                    } catch (Exception $e) {
+                        // Silent fail — booking is still saved
+                    }
                 }
             }
         }

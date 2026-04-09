@@ -223,6 +223,19 @@ html,body{
         width: 100%;
     }
 
+    .navbar__btn {
+        width: 100%;
+        padding: 1rem 2rem;
+        height: auto;
+    }
+
+    .navbar__btn .button {
+        height: auto;
+        padding: 0.75rem 1rem;
+        font-size: 1.6rem;
+        border-radius: 4px;
+    }
+
     .navbar__links{
         text-align: center;
         padding: 2rem;
@@ -382,7 +395,7 @@ position: relative;
     align-items: center;
     justify-self: center;
     margin: 0 auto;
-    min-height: 70vh;
+    min-height: calc(100vh - 80px);
     background-color: var(--bg-page);
     z-index: 1;
     width: 100%;

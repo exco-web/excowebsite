@@ -27,7 +27,11 @@ $tag_labels = [
 ?>
 <!DOCTYPE html>
 <html lang="en">
-    <?php $page_title = 'Home'; include 'includes/head.php'; ?>
+    <?php
+        $page_title = 'Home';
+        $page_description = 'Expert Consult offers professional accounting and financial consulting services. Book a consultation online today.';
+        include 'includes/head.php';
+    ?>
     <body>
         <?php if ($logged_in): ?>
             <?php include 'includes/navbar-loggedin.php'; ?>
@@ -43,8 +47,10 @@ $tag_labels = [
                             <?php include 'includes/banner.php'; ?>
                         </div>
                         <div style="filter: drop-shadow(0 0 2px rgba(0, 0, 0,   0.75))">
-                            <h1 class="animate">EXPERT</h1>
-                            <h2 class="animate">CONSULT</h2>
+                            <h1>
+                                <span class="animate brand--expert">EXPERT</span>
+                                <span class="animate brand--consult">CONSULT</span>
+                            </h1>
                             <?php if ($logged_in): ?>
                                 <h3 class="animate">Welcome back, <?= htmlspecialchars($user_data['name']) ?>.</h3>
                             <?php endif; ?>
@@ -60,7 +66,7 @@ $tag_labels = [
                         <?php endif; ?>
                     </div>
                     <div class="main__img--container">
-                        <img src="<?= BASE_URL ?>/images/pic1.svg" class="animateLong" alt="" id="main__img">
+                        <img src="<?= BASE_URL ?>/images/pic1.svg" class="animateLong" alt="Expert Consult illustration" id="main__img">
                     </div>
 
                     <?php if ($recent_announcements): ?>

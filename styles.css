@@ -414,11 +414,11 @@ position: relative;
     overflow: hidden;
     white-space: nowrap;
     background: var(--bg-page);
-    color: var(--text-primary);
+    color: #fff;
 }
 
 #main__banner .scroll {
-    background: var(--bg-raised);
+    background: var(--text-primary);
     display: flex;
     align-items: center;
     gap: 0 1rem;
@@ -463,13 +463,13 @@ position: relative;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    color: var(--text-primary);
+    color: #fff;
     font-size: .8rem;
     padding: 0 2rem;
     white-space: nowrap;
-    border-left: 1px solid rgba(255, 255, 255, 0.8);
-    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.9);
-    filter: drop-shadow(0 0 3px rgba(0, 0, 0, 0.8));
+    border-left: 1px solid rgba(255, 255, 255, 0.2);
+    text-shadow: 0 2px 20px rgba(0, 0, 0, 0.12);
+    filter: drop-shadow(0 0 12px rgba(0, 0, 0, 0.08));
     gap: 0.15rem;
 }
 

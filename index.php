@@ -16,7 +16,7 @@ if (isset($_SESSION['user_id'])) {
 }
 $logged_in = $user_data !== null;
 
-$recent_announcements = mysqli_query($con, "SELECT id, title, tag, created_at FROM announcements ORDER BY created_at DESC LIMIT 3");
+$recent_announcements = mysqli_query($con, "SELECT id, title, tag, created_at FROM announcements WHERE deleted_at IS NULL ORDER BY created_at DESC LIMIT 3");
 $recent_announcements = $recent_announcements ? mysqli_fetch_all($recent_announcements, MYSQLI_ASSOC) : [];
 
 $tag_labels = [

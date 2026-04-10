@@ -42,11 +42,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     }
 }
 
-// Admin: delete announcement
+mysqli_query($con, "ALTER TABLE announcements ADD COLUMN IF NOT EXISTS deleted_at DATETIME NULL");
+
+// Admin: delete announcement (soft delete)
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'delete' && $is_admin) {
     csrf_verify();
     $del_id = (int)$_POST['announcement_id'];
-    $stmt   = mysqli_prepare($con, "DELETE FROM announcements WHERE id = ?");
+    $stmt   = mysqli_prepare($con, "UPDATE announcements SET deleted_at = NOW() WHERE id = ?");
     mysqli_stmt_bind_param($stmt, "i", $del_id);
     mysqli_stmt_execute($stmt);
     header("Location: " . BASE_URL . "/announcements");
@@ -57,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 $single = null;
 if (isset($_GET['id'])) {
     $view_id = (int)$_GET['id'];
-    $stmt    = mysqli_prepare($con, "SELECT * FROM announcements WHERE id = ?");
+    $stmt    = mysqli_prepare($con, "SELECT * FROM announcements WHERE id = ? AND deleted_at IS NULL");
     mysqli_stmt_bind_param($stmt, "i", $view_id);
     mysqli_stmt_execute($stmt);
     $single = mysqli_fetch_assoc(mysqli_stmt_get_result($stmt));
@@ -70,7 +72,7 @@ if (isset($_GET['id'])) {
 }
 
 // Fetch all announcements
-$announcements = mysqli_query($con, "SELECT * FROM announcements ORDER BY created_at DESC");
+$announcements = mysqli_query($con, "SELECT * FROM announcements WHERE deleted_at IS NULL ORDER BY created_at DESC");
 $all = $announcements ? mysqli_fetch_all($announcements, MYSQLI_ASSOC) : [];
 ?>
 <!DOCTYPE html>

@@ -97,8 +97,8 @@ if ($stmt) {
                         <?php if ($bookings_result && mysqli_num_rows($bookings_result) > 0): ?>
                             <?php while ($booking = mysqli_fetch_assoc($bookings_result)): ?>
                                 <tr>
-                                    <td><?= htmlspecialchars($booking['reason'] ?? '—') ?></td>
                                     <td><?= date('l, F j Y', strtotime($booking['date'])) ?> &middot; <?= date('H:i', strtotime($booking['time'])) ?></td>
+                                    <td><?= htmlspecialchars($booking['reason'] ?? '—') ?></td>
                                     <td><span class="bookings__status bookings__status--<?= htmlspecialchars($booking['status']) ?>"><?= htmlspecialchars(ucfirst($booking['status'])) ?></span></td>
                                     <td style="text-align:right;">
                                         <form method="POST">

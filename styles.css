@@ -1610,6 +1610,22 @@ input.admin__select[type="date"] {
     pointer-events: none;
 }
 
+.admin__log-btn {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    border-radius: 4px;
+    padding: 4px 8px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: color 0.2s, border-color 0.2s;
+}
+
+.admin__log-btn:hover {
+    color: var(--text-secondary);
+    border-color: var(--text-muted);
+}
+
 .admin__remove {
     background: none;
     border: 1px solid var(--accent);

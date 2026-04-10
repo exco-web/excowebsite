@@ -39,6 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt = mysqli_prepare($con, "INSERT INTO bookings (user_id, date, time, status, reason, guest_name, guest_email, guest_phone, notes) VALUES (NULL, ?, ?, 'confirmed', ?, ?, ?, ?, ?)");
         mysqli_stmt_bind_param($stmt, "sssssss", $new_date, $new_time, $new_reason, $guest_name, $guest_email, $guest_phone, $notes);
         mysqli_stmt_execute($stmt);
+        log_booking($con, mysqli_insert_id($con), 'created', 'admin', "Guest: {$guest_name}, Date: {$new_date}, Time: {$new_time}");
         header("Location: " . BASE_URL . "/admin");
         exit();
     }

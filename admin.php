@@ -13,6 +13,14 @@ if ($user_data['role'] !== 'admin') {
 
 mysqli_query($con, "ALTER TABLE bookings ADD COLUMN IF NOT EXISTS notes TEXT NULL");
 mysqli_query($con, "ALTER TABLE bookings ADD COLUMN IF NOT EXISTS reason VARCHAR(100) NULL");
+mysqli_query($con, "CREATE TABLE IF NOT EXISTS booking_logs (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    booking_id INT NOT NULL,
+    action VARCHAR(50) NOT NULL,
+    changed_by VARCHAR(100) NOT NULL,
+    details TEXT NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+)");
 
 // Handle status update
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -20,8 +28,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['booking_id'], $_POST['action']) && $_POST['action'] === 'remove') {
+    $booking_id = (int)$_POST['booking_id'];
+    log_booking($con, $booking_id, 'deleted', 'admin');
     $stmt = mysqli_prepare($con, "DELETE FROM bookings WHERE id = ?");
-    mysqli_stmt_bind_param($stmt, "i", $_POST['booking_id']);
+    mysqli_stmt_bind_param($stmt, "i", $booking_id);
     mysqli_stmt_execute($stmt);
     header("Location: " . BASE_URL . "/admin?" . http_build_query($_GET));
     exit();
@@ -63,6 +73,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['booking_id'], $_POST[
             mysqli_stmt_bind_param($stmt, "sssi", $new_status, $new_notes, $new_reason, $booking_id);
         }
         mysqli_stmt_execute($stmt);
+
+        // Log the change
+        $log_parts = [];
+        if ($prev && $prev['status'] !== $new_status) $log_parts[] = "Status: {$prev['status']} → {$new_status}";
+        if ($prev && $prev['date'] !== $new_date)     $log_parts[] = "Date: {$prev['date']} → {$new_date}";
+        if ($prev && $prev['time'] !== $new_time)     $log_parts[] = "Time: {$prev['time']} → {$new_time}";
+        log_booking($con, $booking_id, 'updated', 'admin', $log_parts ? implode(', ', $log_parts) : 'Notes/reason updated');
 
         // Email client if status changed or date/time changed
         $status_changed   = $prev && $prev['status'] !== $new_status;
@@ -288,6 +305,7 @@ if ($params) {
                                     </select>
                                     <button type="submit" class="admin__save">Save</button>
                                 </form>
+                                <button type="button" class="admin__log-btn" data-id="<?= (int)$b['id'] ?>" title="View history"><i class="fas fa-history"></i></button>
                                 <form method="POST" style="display:inline;">
                                     <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(csrf_token()) ?>">
                                     <input type="hidden" name="booking_id" value="<?= (int)$b['id'] ?>">
@@ -303,6 +321,32 @@ if ($params) {
                     </tr>
                 <?php endif; ?>
             </table>
+            </div>
+        </div>
+
+        <?php
+        // Fetch all logs for bookings on this page
+        $booking_ids = array_column($rows, 'id');
+        $logs_by_booking = [];
+        if ($booking_ids) {
+            $in = implode(',', array_map('intval', $booking_ids));
+            $logs_result = mysqli_query($con, "SELECT * FROM booking_logs WHERE booking_id IN ($in) ORDER BY created_at ASC");
+            while ($log = mysqli_fetch_assoc($logs_result)) {
+                $logs_by_booking[$log['booking_id']][] = $log;
+            }
+        }
+        ?>
+        <script>
+        const bookingLogs = <?= json_encode($logs_by_booking) ?>;
+        </script>
+
+        <div class="notes-modal__overlay" id="log-modal" style="display:none;">
+            <div class="notes-modal__box">
+                <div class="notes-modal__header">
+                    <h3 class="notes-modal__title">Booking History</h3>
+                    <button type="button" class="notes-modal__close" id="log-modal-close">&times;</button>
+                </div>
+                <div id="log-modal-content" style="max-height:400px; overflow-y:auto; padding:0.5rem 0;"></div>
             </div>
         </div>
 
@@ -365,6 +409,32 @@ if ($params) {
 
                 document.getElementById('edit-' + activeId).requestSubmit();
                 closeModal();
+            });
+
+            // Booking log modal
+            const logModal   = document.getElementById('log-modal');
+            const logContent = document.getElementById('log-modal-content');
+            document.getElementById('log-modal-close').addEventListener('click', () => logModal.style.display = 'none');
+            logModal.addEventListener('click', e => { if (e.target === logModal) logModal.style.display = 'none'; });
+
+            document.querySelectorAll('.admin__log-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const id   = btn.dataset.id;
+                    const logs = bookingLogs[id] || [];
+                    if (!logs.length) {
+                        logContent.innerHTML = '<p style="color:#666; padding:0.5rem;">No history yet.</p>';
+                    } else {
+                        logContent.innerHTML = logs.map(l => `
+                            <div style="padding:0.6rem 0; border-bottom:1px solid var(--border);">
+                                <span style="font-size:0.75rem; color:var(--text-muted);">${l.created_at}</span>
+                                <span style="margin-left:0.75rem; font-size:0.8rem; color:var(--accent); text-transform:uppercase;">${l.action}</span>
+                                <span style="margin-left:0.75rem; font-size:0.8rem; color:var(--text-muted);">by ${l.changed_by}</span>
+                                ${l.details ? `<p style="margin:0.25rem 0 0; font-size:0.85rem; color:var(--text-secondary);">${l.details}</p>` : ''}
+                            </div>
+                        `).join('');
+                    }
+                    logModal.style.display = 'flex';
+                });
             });
 
             // Grey out Save buttons until a change is made

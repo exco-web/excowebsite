@@ -68,6 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['date'], $_POST['time'
                     $stmt = mysqli_prepare($con, "INSERT INTO bookings (user_id, date, time, reason) VALUES (?, ?, ?, ?)");
                     mysqli_stmt_bind_param($stmt, "ssss", $user_id, $date, $time, $reason);
                     mysqli_stmt_execute($stmt);
+                    log_booking($con, mysqli_insert_id($con), 'created', $user_data['name'], "Date: {$date}, Time: {$time}, Reason: {$reason}");
 
                     $date_fmt = $d->format('l, F j Y');
                     $time_fmt = date('H:i', strtotime($time));

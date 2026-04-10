@@ -109,6 +109,12 @@ function clear_rate_limit($key) {
     unset($_SESSION['rl_attempts_' . $key], $_SESSION['rl_time_' . $key]);
 }
 
+function log_booking($con, $booking_id, $action, $changed_by, $details = null) {
+    $stmt = mysqli_prepare($con, "INSERT INTO booking_logs (booking_id, action, changed_by, details) VALUES (?, ?, ?, ?)");
+    mysqli_stmt_bind_param($stmt, "isss", $booking_id, $action, $changed_by, $details);
+    mysqli_stmt_execute($stmt);
+}
+
 function random_num($length){
 	$text = "";
 	if($length<5){

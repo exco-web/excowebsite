@@ -1,7 +1,7 @@
 <?php
-require '../vendor/autoload.php';
+require '/home/u916018987/public_html/vendor/autoload.php';
 
-include '../connections.php';
+include '/home/u916018987/public_html/connections.php';
 
 // Fetch all confirmed bookings for tomorrow
 $stmt = mysqli_prepare($con, "

@@ -573,12 +573,19 @@ input.main__btn {
 
 .main__btn--dark {
     background-image: none;
-    background-color: var(--bg-input);
-    border: 1px solid var(--border);
+    background-color: transparent;
+    border: 1.5px solid var(--bg-nav);
+    color: var(--bg-nav);
+    -webkit-text-fill-color: var(--bg-nav);
 }
 
 .main__btn--dark::after {
-    background-color: var(--bg-raised);
+    background-color: var(--bg-nav);
+}
+
+.main__btn--dark:hover {
+    color: #fff;
+    -webkit-text-fill-color: #fff;
 }
 
 .main__img--container {
@@ -2134,9 +2141,8 @@ input.admin__select[type="date"] {
     font-size: 0.75rem;
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    color: rgba(255, 255, 255, 0.07);
-    margin-bottom: 0.25rem;
-    -webkit-text-fill-color: var(--text-muted);
+    color: rgba(220, 232, 245, 0.5);
+    -webkit-text-fill-color: rgba(220, 232, 245, 0.5);
 }
 
 .main__announcements__list {
@@ -2149,7 +2155,7 @@ input.admin__select[type="date"] {
     display: flex;
     flex-direction: column;
     gap: 0.2rem;
-    background: var(--bg-raised);
+    background: rgba(255, 255, 255, 0.07);
     border-radius: 6px;
     padding: 0.75rem;
     text-decoration: none;
@@ -2157,7 +2163,7 @@ input.admin__select[type="date"] {
 }
 
 .main__announcements__item:hover {
-    background: rgba(140, 147, 155, 0.5);
+    background: rgba(255, 255, 255, 0.15);
 }
 
 .main__announcements__title {

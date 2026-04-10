@@ -22,19 +22,19 @@
     --text-disabled:    #cfd8dc;
 
     /* Accent */
-    --accent:       #c0392b;
-    --accent-alt:   #e74c3c;
+    --accent:       #1e6ab4;
+    --accent-alt:   #2980d9;
     --accent-hover: #1a2b4a;
     --success:      #27ae60;
 
     /* Legacy button colours */
-    --btn-legacy:       #c0392b;
+    --btn-legacy:       #1e6ab4;
     --btn-legacy-hover: #1a2b4a;
 
     /* Gradients */
-    --gradient-accent:        linear-gradient(135deg, #c0392b 0%, #922b21 100%);
+    --gradient-accent:        linear-gradient(135deg, #1e6ab4 0%, #1a2b4a 100%);
     --gradient-heading:       linear-gradient(135deg, #ffffff 0%, #dce8f0 100%);
-    --gradient-services-text: linear-gradient(to right, #c0392b 0%, #e74c3c 100%);
+    --gradient-services-text: linear-gradient(to right, #1a2b4a 0%, #1e6ab4 100%);
 
     /* Status badges */
     --status-pending-bg:   #fef9e7;
@@ -42,7 +42,7 @@
     --status-confirmed-bg: #eafaf1;
     --status-confirmed-fg: #1e8449;
     --status-cancelled-bg: #fdedec;
-    --status-cancelled-fg: #c0392b;
+    --status-cancelled-fg: #c0392b;  /* keep red for cancelled/danger states */
 }
 
 *{
@@ -332,7 +332,7 @@ position: relative;
 
 .dropdown-content a:hover {
     background: var(--bg-input);
-    color: #fff;
+    color: var(--text-primary);
 }
 
 .dropdown:hover .dropdown-content { display: block; }
@@ -414,7 +414,7 @@ position: relative;
     overflow: hidden;
     white-space: nowrap;
     background: var(--bg-page);
-    color: #fff;
+    color: var(--text-primary);
 }
 
 #main__banner .scroll {
@@ -1050,7 +1050,7 @@ input.main__btn {
 }
 
 .query__info__value {
-    color: #fff;
+    color: var(--text-primary);
 }
 
 .query__form input[type="email"],
@@ -1362,7 +1362,7 @@ animation-fill-mode: backwards;
 .account{
     padding: 3rem 5rem 1.5rem;
     width: 100%;
-    color: #cecece;
+    color: var(--text-primary);
     background: var(--bg-page);
     min-height: calc(100vh - 360px);
 }
@@ -1436,7 +1436,7 @@ animation-fill-mode: backwards;
 .content__table{
     table-layout: auto;
     width: 100%;
-    color: #ffffff;
+    color: var(--text-primary);
     background-color: var(--bg-page);
     border-collapse: collapse;
     font-size: 0.9em;
@@ -1955,7 +1955,7 @@ input.admin__select[type="date"] {
 
 .booking__info-title {
     font-size: 1.4rem;
-    color: #fff;
+    color: var(--text-primary);
     margin-bottom: 1rem;
 }
 
@@ -2031,7 +2031,7 @@ input.admin__select[type="date"] {
 }
 
 .calendar__nav:hover {
-    color: #fff;
+    color: var(--accent);
 }
 
 .calendar__grid,

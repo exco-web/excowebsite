@@ -4,52 +4,52 @@
    ============================================================ */
 :root {
     /* Backgrounds */
-    --bg-page:   #3a3939;   /* main page background */
-    --bg-raised: #1e1e1e;   /* cards, inputs, calendar */
-    --bg-input:  #2a2a2a;   /* form field backgrounds */
-    --bg-footer: #141414;   /* footer */
-    --bg-nav: #161616;
+    --bg-page:   #f4f6f8;   /* main page background */
+    --bg-raised: #ffffff;   /* cards, modals */
+    --bg-input:  #eef0f3;   /* form field backgrounds */
+    --bg-footer: #1a2b4a;   /* footer */
+    --bg-nav:    #1a2b4a;   /* navbar */
 
     /* Borders */
-    --border: #2e2e2e;
+    --border: #d8dde3;
 
     /* Text */
-    --text-primary:     #fff;
-    --text-secondary:   #ccc;
-    --text-muted:       #888;
-    --text-faint:       #666;
-    --text-placeholder: #555;
-    --text-disabled:    #444;
+    --text-primary:     #1c2b3a;
+    --text-secondary:   #3d4f60;
+    --text-muted:       #6b7d8f;
+    --text-faint:       #9aacb8;
+    --text-placeholder: #b0bec5;
+    --text-disabled:    #cfd8dc;
 
     /* Accent */
-    --accent:       #fe4534;  /* primary red/orange */
-    --accent-alt:   #ff136f;  /* secondary pink (used in gradients) */
-    --accent-hover: #3428b9;  /* main button hover fill */
-    --success:      #4caf50;
+    --accent:       #c0392b;
+    --accent-alt:   #e74c3c;
+    --accent-hover: #1a2b4a;
+    --success:      #27ae60;
 
-    /* Legacy button colours (used on older components — update when redesigning) */
-    --btn-legacy:       #f77062;
-    --btn-legacy-hover: #2a2097;
+    /* Legacy button colours */
+    --btn-legacy:       #c0392b;
+    --btn-legacy-hover: #1a2b4a;
 
     /* Gradients */
-    --gradient-accent:        linear-gradient(to top, #a1a1a1 0%, #000 20%, #000 80, #ffffff 100%);
-    --gradient-heading:       linear-gradient(to top, #000 0%, #bb4646 10%, #5a5757 70%, #fff 100%);
-    --gradient-services-text: linear-gradient(to right, #611515 0%, #7c2020 0%, #b92626 21%, #c43232 52%, #9c1e1e 78%, #851919 100%);
+    --gradient-accent:        linear-gradient(135deg, #c0392b 0%, #922b21 100%);
+    --gradient-heading:       linear-gradient(135deg, #ffffff 0%, #dce8f0 100%);
+    --gradient-services-text: linear-gradient(to right, #c0392b 0%, #e74c3c 100%);
 
     /* Status badges */
-    --status-pending-bg:   #2e2a00;
-    --status-pending-fg:   #f0c040;
-    --status-confirmed-bg: #0a2e0a;
-    --status-confirmed-fg: #4caf50;
-    --status-cancelled-bg: #2e0a0a;
-    --status-cancelled-fg: #fe4534;
+    --status-pending-bg:   #fef9e7;
+    --status-pending-fg:   #b7950b;
+    --status-confirmed-bg: #eafaf1;
+    --status-confirmed-fg: #1e8449;
+    --status-cancelled-bg: #fdedec;
+    --status-cancelled-fg: #c0392b;
 }
 
 *{
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-family: 'Segoe UI', Arial, sans-serif;
 }
 
 html,body{
@@ -75,10 +75,8 @@ html,body{
     top: 0;
     z-index: 999;
     box-shadow:
-        0 1px 0 rgba(255, 255, 255, 0.04),
-        0 4px 12px rgba(0, 0, 0, 0.5),
-        0 8px 40px rgba(0, 0, 0, 0.4),
-        0 16px 60px rgba(254, 69, 52, 0.06);
+        0 1px 0 rgba(255, 255, 255, 0.06),
+        0 4px 16px rgba(0, 0, 0, 0.25);
 }
 
 .navbar__container{
@@ -196,8 +194,8 @@ html,body{
     }
 
     .navbar__menu.active{
-        background: var(--bg-page);
-        border-bottom: 1px solid var(--border);
+        background: var(--bg-nav);
+        border-bottom: 1px solid rgba(255,255,255,0.08);
         top: 100%;
         opacity: 1;
         transition: all 0.5s ease;
@@ -379,14 +377,13 @@ position: relative;
 } */
 
 .everything{
-    box-shadow: 0px 20px 50px rgba(0,0,0,1);
-    background-color: #131c22;
-    color: var(--bg-page);
+    background-color: var(--bg-page);
+    color: var(--text-primary);
     padding: 0% 5%;
 }
 
 .main{
-    color: var(--bg-page);
+    color: var(--text-primary);
 }
 
 .main__container{
@@ -396,7 +393,7 @@ position: relative;
     justify-self: center;
     margin: 0 auto;
     min-height: calc(100vh - 80px);
-    background-color: var(--bg-page);
+    background: linear-gradient(135deg, #1a2b4a 0%, #243d5e 100%);
     z-index: 1;
     width: 100%;
     padding: 10px 80px;
@@ -489,49 +486,39 @@ position: relative;
 .brand--expert{
     display: block;
     font-size: 4rem;
-    background-color: var(--bg-page);
-    background-image: var(--gradient-heading);
-    background-size: 100%;
-    -webkit-background-clip: text;
-    -moz-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    -moz-text-fill-color: transparent;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: #ffffff;
+    -webkit-text-fill-color: #ffffff;
 }
 
 .brand--consult{
     display: block;
     font-size: 3rem;
-    background-color: var(--bg-page);
-    background-image: linear-gradient(to top, #000 0%, #17177a 20%, #f0dfdf 90%, #fff 100%);
-    background-size: 100%;
-    -webkit-background-clip: text;
-    -moz-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    -moz-text-fill-color: transparent;
+    font-weight: 300;
+    letter-spacing: 0.1em;
+    color: rgba(220, 232, 245, 0.85);
+    -webkit-text-fill-color: rgba(220, 232, 245, 0.85);
 }
 
 .main__content h3{
-    font-size: 2rem;
-    background-color: #fafafa;
-    background-size: 100%;
-    -webkit-background-clip: text;
-    -moz-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    -moz-text-fill-color: transparent;
+    font-size: 1.3rem;
+    font-weight: 400;
+    color: rgba(220, 232, 245, 0.9);
+    -webkit-text-fill-color: rgba(220, 232, 245, 0.9);
 }
 
 .main__content p {
-    font-size: 0.85rem;
-    background: var(--bg-input);
-    -webkit-background-clip: border-box;
-    -moz-background-clip: border-box;
-    background-clip: border-box;
-    padding: 14px 18px;
-    border-radius: 6px;
-    box-shadow: 4px 4px 12px rgba(0,0,0,0.6);
-    width: 320px;
-    -webkit-text-fill-color: var(--text-secondary);
-    color: var(--text-secondary);
+    font-size: 0.95rem;
+    line-height: 1.75;
+    background: none;
+    padding: 0;
+    border-radius: 0;
+    box-shadow: none;
+    width: auto;
+    max-width: 480px;
+    color: rgba(220, 232, 245, 0.75);
+    -webkit-text-fill-color: rgba(220, 232, 245, 0.75);
 }
 
 .main__btn{
@@ -692,7 +679,7 @@ input.main__btn {
 }
 
 .services h1{
-    background-color: #ff8177;
+    background-color: var(--bg-page);
     background-image: var(--gradient-services-text);
     background-size: 100%;
     font-size: 4rem;
@@ -2129,8 +2116,8 @@ input.admin__select[type="date"] {
 }
 
 .bookings__status--completed {
-    background: #1e2a1e;
-    color: #6abf6a;
+    background: #eafaf1;
+    color: #1e8449;
 }
 
 /* ── Index announcements sidebar ──────────────────────── */
@@ -2147,7 +2134,7 @@ input.admin__select[type="date"] {
     font-size: 0.75rem;
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    color: var(--text-muted);
+    color: rgba(220, 232, 245, 0.5);
     margin-bottom: 0.25rem;
     -webkit-text-fill-color: var(--text-muted);
 }
@@ -2170,19 +2157,19 @@ input.admin__select[type="date"] {
 }
 
 .main__announcements__item:hover {
-    background: var(--bg-input);
+    background: rgba(255, 255, 255, 0.07);
 }
 
 .main__announcements__title {
     font-size: 0.85rem;
-    color: var(--text-secondary);
+    color: rgba(220, 232, 245, 0.85);
     margin: 0;
     line-height: 1.4;
 }
 
 .main__announcements__date {
     font-size: 0.72rem;
-    color: var(--text-muted);
+    color: rgba(220, 232, 245, 0.45);
     margin: 0;
 }
 
